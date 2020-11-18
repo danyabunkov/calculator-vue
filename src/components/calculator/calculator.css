@@ -1,0 +1,26 @@
+.calculator {
+    position: relative;
+    padding: 0 2px 5px 2px;
+    max-width: 234px;
+    background: #908992;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(44px);
+    border-radius: 4px;
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+.calculator__header {
+    position: relative;
+    padding: 12px 17px 16px 0;
+    white-space: nowrap;
+}
+
+.calculator__buttons {
+    display: grid;
+    grid-template: repeat(4, 1fr) / repeat(4, 1fr);
+    grid-gap: 2px;
+    background-color: #979797;
+    border-radius: 0 0 3px 3px;
+    overflow: hidden;
+}

@@ -1,0 +1,35 @@
+.display {
+    color: #FFFFFF;
+    text-align: right;
+}
+
+.display:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 40%;
+    height: 100%;
+    z-index: 4;
+    background-color: #908992;
+}
+
+.display__buffer {
+    font-weight: 300;
+    font-size: 18px;
+    line-height: 21px;
+    text-align: right;
+    margin: 0 0 8px 0;
+}
+
+.display__placeholder {
+    font-size: 13px;
+    opacity: 0.6;
+}
+
+.display__result {
+    font-style: normal;
+    font-weight: 300;
+    font-size: 21px;
+    line-height: 24px;
+}

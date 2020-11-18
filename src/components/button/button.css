@@ -1,0 +1,28 @@
+.button {
+    padding: 15px 0;
+    font-size: 18px;
+    line-height: 21px;
+    color: #000000;
+    background-color: #D8D8D8;
+    cursor: pointer;
+    transition: 0.2s;
+    outline: none;
+    border: none;
+}
+
+.button:hover {
+    opacity: 0.8;
+}
+
+/* должен быть модификатор button--operator, но styles ругается */
+.buttonOperator {
+    background-color: #B15E5E;
+    color: #FFFFFF;
+}
+
+/* должен быть модификатор button--zero, но styles ругается */
+.buttonZero {
+    grid-column: span 3;
+}
+
+
