@@ -26,9 +26,9 @@ export default class Calculator extends Vue {
   }
 
   private doAction(value: TOperators | number): void {
-    const canDoFetchResult = this.display.buffer.length > 3 || this.display.buffer.length === 1;
+    const canFetchResult = this.display.buffer.length !== 3 || !this.display.buffer.includes(' ');
     value === '='
-      ? ( canDoFetchResult && this.$store.dispatch('fetchResult'))
+      ? ( canFetchResult && this.$store.dispatch('fetchResult'))
       : this.$store.commit('DO_ACTION', value);
   }
 

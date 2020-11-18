@@ -4,6 +4,7 @@ import { Module } from 'vuex'
 
 import { ICalculatorState } from "@/store/types/calculator-state.interface";
 import { TOperators } from "@/components/types/operators.type";
+import { calculateResult } from "@/functions/calculateResult.function";
 import { lastSighIsAddOrMinus } from "@/functions/lastSighIsAddOrMinus.function";
 import { IError } from "@/components/types/error.interface";
 
@@ -15,10 +16,6 @@ export const calculator: Module<ICalculatorState, {}> = {
       buffer: '',
       result: 0,
     },
-    hiddenResult: {
-      result: 0,
-      sign: '+',
-    },
     error: {
       message: '',
       isShow: false,
@@ -29,20 +26,14 @@ export const calculator: Module<ICalculatorState, {}> = {
     DO_ACTION: (state, value: TOperators | number): void => {
       if (typeof value === 'number') {
         state.display.buffer += value;
-        state.hiddenResult.sign === '+'
-          ? state.hiddenResult.result += value
-          : state.hiddenResult.result -= value;
         return;
       } else {
         if (value === 'C') {
           state.display.buffer = '';
           state.display.result = 0;
-          state.hiddenResult.result = 0;
-          state.hiddenResult.sign = '+';
           return;
         }
         if (value === '+' || value === '-') {
-          state.hiddenResult.sign = value;
           let lastChar = state.display.buffer.length - 2;
           state.display.buffer = lastSighIsAddOrMinus(state.display.buffer)
             ? state.display.buffer.slice(0, lastChar) + `${value} `
@@ -50,11 +41,9 @@ export const calculator: Module<ICalculatorState, {}> = {
         }
       }
     },
-    DO_RESULT: (state): void => {
+    DO_RESULT: (state, value: number): void => {
       state.display.buffer = '';
-      state.display.result = state.hiddenResult.result;
-      state.hiddenResult.result = 0;
-      state.hiddenResult.sign = '+';
+      state.display.result = value;
       state.loading = false;
     },
     DO_LOADING: (state, value: boolean): void => {
@@ -75,7 +64,8 @@ export const calculator: Module<ICalculatorState, {}> = {
       ctx.commit('DO_LOADING', true);
       try {
         await setTimeout(() => {
-          ctx.commit('DO_RESULT');
+          const result = calculateResult(ctx.state.display.buffer);
+          ctx.commit('DO_RESULT', result);
         }, 2000);
       } catch (error) {
         console.log(error);
