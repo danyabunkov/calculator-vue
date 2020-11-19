@@ -15,6 +15,7 @@ export const calculator: Module<ICalculatorState, {}> = {
     display: {
       buffer: '',
       result: 0,
+      resultDone: false,
     },
     error: {
       message: '',
@@ -25,16 +26,23 @@ export const calculator: Module<ICalculatorState, {}> = {
   mutations: {
     DO_ACTION: (state, value: TOperators | number): void => {
       if (typeof value === 'number') {
-        state.display.buffer += value;
+        state.display.resultDone
+          ? state.display.buffer = ''+value
+          : state.display.buffer += value;
+        state.display.resultDone = false;
         return;
       } else {
         if (value === 'C') {
           state.display.buffer = '';
           state.display.result = 0;
+          state.display.resultDone = false;
           return;
         }
         if (value === '+' || value === '-') {
+          state.display.resultDone = false;
           let lastChar = state.display.buffer.length - 2;
+
+          /** если нажимаем +, а потом сразу -, то идет замена знака и наоборот */
           state.display.buffer = lastSighIsAddOrMinus(state.display.buffer)
             ? state.display.buffer.slice(0, lastChar) + `${value} `
             : state.display.buffer + ` ${value} `;
@@ -42,10 +50,15 @@ export const calculator: Module<ICalculatorState, {}> = {
       }
     },
     DO_RESULT: (state, value: number): void => {
+
+      /** так как используется direction: rtl, то при вводе отрицательного числа, к примеру
+       *  -9 в буффере появится 9- из-за того, что нет пробела между '-' и '9'
+       *  с '+' аналогично, поэтому решим сделать такой тернарник */
       value >= 0
         ? state.display.buffer = '' + value
         : state.display.buffer = ' - ' + Math.abs(value);
 
+      state.display.resultDone = true;
       state.display.result = value;
       state.loading = false;
     },
@@ -63,11 +76,11 @@ export const calculator: Module<ICalculatorState, {}> = {
     error: state => state.error,
   },
   actions: {
-    async fetchResult(ctx) {
+    async fetchResult(ctx, buffer: string) {
       ctx.commit('DO_LOADING', true);
       try {
         await setTimeout(() => {
-          const result = calculateResult(ctx.state.display.buffer);
+          const result = calculateResult(buffer);
           ctx.commit('DO_RESULT', result);
         }, 2000);
       } catch (error) {

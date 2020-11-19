@@ -26,10 +26,15 @@ export default class Calculator extends Vue {
   }
 
   private doAction(value: TOperators | number): void {
-    const canFetchResult =this.display.buffer.length !== 0
-      && (this.display.buffer.length !== 3 || !this.display.buffer.includes(' '));
+    const buffer = this.display.buffer;
+
+    /** можем сделать запрос на сервер только в случе, если у нас не пустая строка
+     *  и если длина не равна трем или не включает в себя ' ',
+     *  т.к. '+' и '-' добавляются как ' + ' */
+    const canFetchResult = buffer.length !== 0 && (buffer.length !== 3 || !buffer.includes(' '));
+
     value === '='
-      ? ( canFetchResult && this.$store.dispatch('fetchResult'))
+      ? ( canFetchResult && this.$store.dispatch('fetchResult', buffer))
       : this.$store.commit('DO_ACTION', value);
   }
 
