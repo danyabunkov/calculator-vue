@@ -42,7 +42,10 @@ export const calculator: Module<ICalculatorState, {}> = {
       }
     },
     DO_RESULT: (state, value: number): void => {
-      state.display.buffer = '';
+      value >= 0
+        ? state.display.buffer = '' + value
+        : state.display.buffer = ' - ' + Math.abs(value);
+
       state.display.result = value;
       state.loading = false;
     },
