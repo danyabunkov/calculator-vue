@@ -9,11 +9,15 @@ export default class Display extends Vue {
   @Prop()
   private display!: IDisplay;
 
+  get reverseString(): string {
+    return this.display.buffer.split(' ').reverse().join(' ');
+  }
+
   render() {
     return (
       <div class={ styles.display }>
         <div class={ styles.display__buffer }>
-          { this.display.buffer || <span class={ styles.display__placeholder }>Ввод</span> }
+          { this.reverseString || <span class={ styles.display__placeholder }>Ввод</span> }
         </div>
         <div class={ styles.display__result }>= { this.display.result }</div>
       </div>
